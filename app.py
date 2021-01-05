@@ -7,8 +7,7 @@ import streamlit as st
 
 PATH_TO_FIRESTORE_KEY = "firestore-key.json"
 
-# Write firestore secret to file if it doesn't exist
-# Then load secrets from file
+# Write firestore key from env to file if it doesn't exist on S4A container / locally
 try:
     with open(PATH_TO_FIRESTORE_KEY, "x") as f:
         json.dump(json.loads(os.environ["FIREBASE_KEY"]), f)
