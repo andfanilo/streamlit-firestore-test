@@ -13,7 +13,7 @@ try:
     with open(PATH_TO_FIRESTORE_KEY, "x") as f:
         json.dump(json.loads(os.environ["FIREBASE_KEY"]), f)
 except FileExistsError:
-    print("Firestore key file file already exists")
+    pass
 
 # Authenticate to Firestore through GOOGLE_APPLICATION_CREDENTIALS env var
 if not firebase_admin._apps:
@@ -24,14 +24,19 @@ db = firestore.client(app)
 
 # Streamlit widgets to let a user create a new post
 with st.sidebar:
+    st.subheader("Create a new post")
     title = st.text_input("Post title")
     url = st.text_input("Post url")
+    password = st.text_input("Password for submission authorization", type="password")
     submit = st.button("Submit new post")
 
     # Once the user has submitted, upload it to the database
     if title and url and submit:
-        doc_ref = db.collection("posts").document(title)
-        doc_ref.set({"title": title, "url": url})
+        if password==os.environ["SUBMIT_PASSWORD"]:
+            doc_ref = db.collection("posts").document(title)
+            doc_ref.set({"title": title, "url": url})
+        else:
+            st.warning("Wrong password, can't authorize submit")
 
 # And then render each post, using some light Markdown
 st.title("Hello Firestore :fire:")
