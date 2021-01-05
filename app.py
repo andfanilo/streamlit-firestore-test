@@ -5,7 +5,7 @@ from firebase_admin import firestore
 import secrets_beta
 import streamlit as st
 
-PATH_TO_FIRESTORE_KEY = "firestore-key.json"
+PATH_TO_FIRESTORE_KEY = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
 # Write firestore key from env to file if it doesn't exist on S4A container / locally
 try:
